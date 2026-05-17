@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T'as connu les dinosaures ? 🦕</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF6B9D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Dinos 🦕">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --mamie-1: #FF6B9D;
+  --mamie-2: #FFB347;
+  --mamie-3: #FFE566;
+  --mamie-bg: #FFF5F9;
+  --mamie-line: #FFCCE3;
+  --mamie-card: #FFF0F6;
+
+  --papi-1: #1E88E5;
+  --papi-2: #00ACC1;
+  --papi-3: #43A047;
+  --papi-bg: #F0F7FF;
+  --papi-line: #BBDEFB;
+  --papi-card: #E3F2FD;
+
+  --c1: #FF6B9D;
+  --c2: #FFB347;
+  --c3: #FFE566;
+  --bg: #FFF5F9;
+  --line: #FFCCE3;
+  --card: #FFF0F6;
+  --text: #2D1B2D;
+  --muted: #999;
+  --radius: 20px;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.4s;
+}
+
+/* ── ÉCRAN D'ACCUEIL ── */
+#screen-welcome {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #FF6B9D 0%, #FFB347 50%, #FFE566 100%);
+  text-align: center;
+}
+
+#screen-welcome h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(32px, 8vw, 60px);
+  color: white;
+  text-shadow: 3px 4px 0 rgba(0,0,0,0.15);
+  line-height: 1.1;
+  margin: 16px 0 8px;
+}
+
+#screen-welcome p {
+  color: rgba(255,255,255,0.9);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  max-width: 400px;
+}
+
+.welcome-dino { font-size: 72px; margin-bottom: 8px; filter: drop-shadow(3px 4px 8px rgba(0,0,0,0.2)); }
+.welcome-row { font-size: 28px; letter-spacing: 6px; margin-bottom: 32px; }
+
+.version-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.version-card {
+  background: white;
+  border-radius: 24px;
+  padding: 32px 40px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  min-width: 180px;
+  text-align: center;
+}
+
+.version-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 16px 48px rgba(0,0,0,0.2); }
+
+.version-card .vc-emoji { font-size: 52px; margin-bottom: 10px; }
+.version-card .vc-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 28px;
+}
+
+.version-card.mamie .vc-title { color: #FF6B9D; }
+.version-card.papi .vc-title { color: #1E88E5; }
+
+/* ── APP PRINCIPALE ── */
+#screen-app { display: none; min-height: 100vh; }
+
+/* HEADER */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.85);
+  border-bottom: 2px solid var(--line);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+.app-header .logo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  color: var(--c1);
+  flex: 1;
+}
+
+.progress-bar {
+  flex: 2;
+  height: 10px;
+  background: var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c1), var(--c2));
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.header-version {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--c1);
+}
+
+/* PAGES */
+.page-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 30px 20px 100px;
+}
+
+.form-page { display: none; }
+.form-page.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* PAGE TITLE */
+.page-title-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding: 20px 24px;
+  background: var(--card);
+  border-radius: var(--radius);
+  border-left: 6px solid var(--c1);
+}
+
+.page-title-block .pt-emoji { font-size: 36px; }
+.page-title-block h2 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 22px;
+  color: var(--c1);
+  line-height: 1.2;
+}
+.page-title-block .pt-num {
+  margin-left: auto;
+  width: 36px; height: 36px;
+  background: var(--c1);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+/* QUESTION */
+.q-block {
+  margin-bottom: 24px;
+  background: white;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.q-block:focus-within { border-color: var(--c1); }
+
+.q-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.q-emoji-sm { font-size: 20px; flex-shrink: 0; }
+.q-text { font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--text); }
+.q-note { font-size: 11.5px; color: var(--muted); font-style: italic; margin: -4px 0 8px 28px; }
+
+/* INPUTS */
+textarea, input[type="text"] {
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg);
+  resize: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+textarea:focus, input[type="text"]:focus {
+  border-color: var(--c1);
+  box-shadow: 0 0 0 3px rgba(255,107,157,0.15);
+}
+
+/* CHECKBOXES */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--line);
+  transition: all 0.15s;
+  background: white;
+}
+
+.checkbox-item:hover { border-color: var(--c1); background: var(--card); }
+.checkbox-item.checked { border-color: var(--c1); background: var(--card); }
+.checkbox-item input { display: none; }
+
+.cb-box {
+  width: 20px; height: 20px;
+  border: 2.5px solid var(--line);
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  font-size: 12px;
+}
+
+.checkbox-item.checked .cb-box {
+  background: var(--c1);
+  border-color: var(--c1);
+  color: white;
+}
+
+/* RADIO (choix unique) */
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 700;
+  transition: all 0.15s;
+  background: white;
+}
+
+.radio-item:hover { border-color: var(--c1); background: var(--card); }
+.radio-item.selected { border-color: var(--c1); background: var(--card); }
+.radio-item input { display: none; }
+
+.rb-dot {
+  width: 20px; height: 20px;
+  border: 2.5px solid var(--line);
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.radio-item.selected .rb-dot {
+  border-color: var(--c1);
+  background: var(--c1);
+}
+.radio-item.selected .rb-dot::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: white;
+  border-radius: 50%;
+}
+
+/* RATING */
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rating-btn {
+  width: 38px; height: 38px;
+  border: 2.5px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--muted);
+}
+
+.rating-btn:hover { border-color: var(--c1); color: var(--c1); }
+.rating-btn.selected { background: var(--c1); border-color: var(--c1); color: white; }
+.rating-emoji { font-size: 22px; }
+
+/* TIMELINE */
+.timeline-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.timeline-dot-ui {
+  width: 18px; height: 18px;
+  background: var(--c1);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.timeline-label { font-size: 13px; font-weight: 700; min-width: 160px; flex-shrink: 0; }
+
+.timeline-input input {
+  flex: 1;
+  padding: 7px 12px;
+  min-width: 60px;
+}
+
+/* FUN BOX */
+.fun-box {
+  background: var(--card);
+  border-left: 5px solid var(--c1);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.fun-box-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 16px;
+  color: var(--c1);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* NAVIGATION */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  padding: 12px 20px 16px;
+  background: rgba(255,255,255,0.95);
+  border-top: 2px solid var(--line);
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+.btn {
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  color: white;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.btn-secondary { background: var(--card); color: var(--c1); border: 2px solid var(--line); }
+.btn-secondary:hover { border-color: var(--c1); }
+
+.btn-export {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  box-shadow: 0 4px 16px rgba(76,175,80,0.3);
+  font-size: 14px;
+}
+.btn-export:hover { transform: translateY(-2px); }
+
+/* ── ÉCRAN RÉSUMÉ ── */
+#screen-done {
+  display: none;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+#screen-done h2 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 36px;
+  color: var(--c1);
+  margin: 16px 0 8px;
+}
+
+#screen-done p { color: var(--muted); font-size: 15px; max-width: 380px; margin: 0 auto 32px; line-height: 1.6; }
+
+.done-emoji { font-size: 72px; }
+
+.export-info {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 28px;
+  max-width: 420px;
+  text-align: left;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  border: 2px solid var(--line);
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.export-info h3 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  color: var(--c1);
+  margin-bottom: 12px;
+}
+
+.export-info li {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.8;
+  color: #555;
+  margin-left: 16px;
+}
+
+.saving-indicator {
+  position: fixed;
+  top: 70px;
+  right: 16px;
+  background: #4CAF50;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 50px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 200;
+}
+.saving-indicator.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ ÉCRAN D'ACCUEIL ═══════════ -->
+<div id="screen-welcome">
+  <div class="welcome-dino">🦕</div>
+  <h1>T'as connu<br>les dinosaures ?</h1>
+  <p>Questions impertinentes sur l'époque préhistorique de vos grands-parents 😄</p>
+  <div class="welcome-row">🌋 🦎 🍖 🌿 🦖</div>
+  <div class="version-cards">
+    <div class="version-card mamie" onclick="startVersion('mamie')">
+      <div class="vc-emoji">💕</div>
+      <div class="vc-title">MAMIE</div>
+    </div>
+    <div class="version-card papi" onclick="startVersion('papi')">
+      <div class="vc-emoji">🏆</div>
+      <div class="vc-title">PAPI</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APP PRINCIPALE ═══════════ -->
+<div id="screen-app">
+  <div class="app-header">
+    <div class="logo">🦕 T'as connu les dinos ?</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="header-version" id="headerVersion">MAMIE</div>
+  </div>
+
+  <div class="saving-indicator" id="savingIndicator">✓ Sauvegardé</div>
+
+  <div class="page-container" id="pageContainer">
+    <!-- Pages injectées par JS -->
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" id="btnPrev" onclick="navigate(-1)">← Précédent</button>
+    <button class="btn btn-primary" id="btnNext" onclick="navigate(1)">Suivant →</button>
+    <button class="btn btn-export" id="btnExport" style="display:none" onclick="exportPDF()">🖨️ Aperçu & PDF</button>
+  </div>
+</div>
+
+<!-- ═══════════ ÉCRAN FINAL ═══════════ -->
+<div id="screen-done">
+  <div class="done-emoji" id="doneEmoji">🦕</div>
+  <h2 id="doneTitle">Bravo Mamie !</h2>
+  <p>Le livre est complet ! Télécharge le PDF et envoie-le à ton service d'impression préféré pour commander 3 exemplaires.</p>
+
+  <div class="export-info">
+    <h3>📦 Services d'impression recommandés</h3>
+    <ul>
+      <li>🇫🇷 <strong>Cheerz.com</strong> — photobooks carrés, livraison France</li>
+      <li>🖨️ <strong>Photobox.fr</strong> — format carré 20×20 cm</li>
+      <li>📸 <strong>Lalalab.com</strong> — très bon rendu couleurs</li>
+      <li>🌍 <strong>Canva Print</strong> — upload PDF, livraison rapide</li>
+    </ul>
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn btn-export" id="btnExportFinal" onclick="exportPDF()">🖨️ Aperçu & PDF</button>
+    <button class="btn btn-secondary" onclick="goBack()">← Modifier</button>
+    <button class="btn btn-secondary" onclick="startOver()">🔄 Autre version</button>
+  </div>
+</div>
+
+<script>
+// ─── DONNÉES ───────────────────────────────────────────────────────────────
+
+const VERSIONS = {
+  mamie: {
+    label: 'MAMIE',
+    emoji: '💕',
+    color1: '#FF6B9D',
+    color2: '#FFB347',
+    color3: '#FFE566',
+    bg: '#FFF5F9',
+    line: '#FFCCE3',
+    card: '#FFF0F6',
+    doneEmoji: '🦕💕',
+    doneTitle: 'Bravo Mamie !',
+    coverEmoji: '🦕',
+    coverDinos: '🌋 🦎 🍖 🌿 🦕',
+    pages: getMamiPages()
+  },
+  papi: {
+    label: 'PAPI',
+    emoji: '🏆',
+    color1: '#1E88E5',
+    color2: '#00ACC1',
+    color3: '#43A047',
+    bg: '#F0F7FF',
+    line: '#BBDEFB',
+    card: '#E3F2FD',
+    doneEmoji: '🦖💙',
+    doneTitle: 'Bravo Papi !',
+    coverEmoji: '🦖',
+    coverDinos: '🦴 🏹 🔧 ⚽ 🦖',
+    pages: getPapiPages()
+  }
+};
+
+function getMamiPages() {
+  return [
+    {
+      emoji: '📜', title: 'Qui est cette Mamie ?', num: 1,
+      fields: [
+        { id: 'prenom', type: 'text', label: 'Ton vrai prénom (celui que personne n\'utilise jamais) :', emoji: '👤' },
+        { id: 'age', type: 'text', label: 'Ton âge (tu peux arrondir si ça te fait moins mal) :', emoji: '🎂' },
+        { id: 'ville', type: 'text', label: 'La ville où tu as grandi :', emoji: '📍' },
+        { id: 'mots', type: 'textarea', label: '3 mots qui te décrivent parfaitement :', emoji: '🌟', rows: 2 },
+        { id: 'peur_questionnaire', type: 'textarea', label: 'Qu\'est-ce qui te fait le plus peur dans ce questionnaire ?', emoji: '🤔', rows: 2 },
+        {
+          id: 'dinos', type: 'radio', label: 'Est-ce que tu as connu les dinosaures ?', emoji: '🦕',
+          options: ['Oui, on était voisins', 'Non, mais c\'était juste avant moi', 'Non !!!']
+        }
+      ]
+    },
+    {
+      emoji: '👧', title: 'L\'enfance de Mamie\n(l\'époque sans internet, oui oui)', num: 2,
+      fields: [
+        { id: 'chambre', type: 'text', label: 'Décris ta chambre d\'enfant en 3 mots :', emoji: '🏠' },
+        { id: 'dessins_animes', type: 'textarea', label: 'Tes dessins animés préférés (qui n\'existent probablement plus) :', emoji: '📺', rows: 2 },
+        { id: 'bonbons', type: 'text', label: 'Le truc que tu achetais avec tes pièces de 10 centimes :', emoji: '🍬' },
+        { id: 'betise', type: 'textarea', label: 'La bêtise la plus énorme que tu aies faite enfant :', emoji: '😇', rows: 3, note: '⚠️ Question piège — réponds honnêtement !' },
+        { id: 'ecole', type: 'textarea', label: 'Ta matière préférée à l\'école / celle que tu détestais :', emoji: '👩‍🏫', rows: 2 },
+        { id: 'jeux', type: 'textarea', label: 'À quoi tu jouais dehors ? (sans écran, ça devait être bizarre…)', emoji: '🎮', rows: 2 },
+        { id: 'surnom', type: 'text', label: 'Ton surnom quand tu étais petite :', emoji: '💭' }
+      ]
+    },
+    {
+      emoji: '😎', title: 'Mamie ado\n(les années folles)', num: 3,
+      fields: [
+        { id: 'coiffure', type: 'text', label: 'Ta coiffure la plus catastrophique :', emoji: '💇‍♀️' },
+        { id: 'tenue', type: 'textarea', label: 'Ta tenue la plus tendance de l\'époque :', emoji: '👗', rows: 2 },
+        { id: 'chanson_coeur', type: 'text', label: 'Ta chanson que tu connaissais par cœur :', emoji: '🎤' },
+        { id: 'artiste_fan', type: 'text', label: 'Le chanteur / groupe pour lequel tu étais en mode fan-fille :', emoji: '💿' },
+        { id: 'chanson_honte', type: 'text', label: 'La chanson dont tu avais honte d\'aimer :', emoji: '🙈' },
+        { id: 'drague', type: 'textarea', label: 'Comment on draguait à ton époque ? (lettres ? téléphone fixe ?)', emoji: '💌', rows: 2 },
+        { id: 'pire_souvenir', type: 'textarea', label: 'Ton pire souvenir de lycée (tu peux rire maintenant) :', emoji: '😬', rows: 2 },
+        { id: 'couvre_feu', type: 'text', label: 'Heure officielle de rentrée vs heure réelle :', emoji: '🌙', note: 'Exemple : "21h... mais souvent 23h"' }
+      ]
+    },
+    {
+      emoji: '📱', title: 'Mamie & la technologie\n(le grand saut dans le futur)', num: 4,
+      fields: [
+        {
+          id: 'timeline', type: 'timeline', label: 'La ligne du temps de Mamie', emoji: '⏳',
+          items: ['📺 La télé couleur', '🖥️ Premier ordinateur', '📱 Premier téléphone mobile', '🌐 Internet à la maison', '🤳 Premier selfie']
+        },
+        { id: 'techno_peur', type: 'text', label: 'La technologie qui te fait le plus peur aujourd\'hui :', emoji: '😰' },
+        { id: 'appli', type: 'text', label: 'L\'appli sur ton téléphone que tu utilises le plus :', emoji: '🏆' },
+        { id: 'avant', type: 'textarea', label: 'Le truc qu\'on faisait avant et qu\'on comprend plus qu\'on faisait comme ça :', emoji: '🤷‍♀️', rows: 2, note: 'Ex : aller à la bibliothèque, utiliser une carte routière…' },
+        { id: 'techno_enerve', type: 'textarea', label: 'La technologie d\'aujourd\'hui qui t\'énerve ou que tu ne comprends pas :', emoji: '😤', rows: 2 }
+      ]
+    },
+    {
+      emoji: '👶', title: 'Mamie et ses petits-enfants\n(son œuvre la plus grande)', num: 5,
+      fields: [
+        { id: 'ressenti_mamie', type: 'textarea', label: 'Ce que tu as ressenti quand tu as appris que tu allais être mamie :', emoji: '💫', rows: 2 },
+        { id: 'prefere', type: 'text', label: 'Ton petit-enfant préféré (allez, sois honnête…)', emoji: '🏆', note: '💡 Conseil : laisse un blanc, ça évitera les disputes de famille 😂' },
+        { id: 'secret', type: 'textarea', label: 'Le secret que tu gardes uniquement pour toi (sans le dire aux parents) :', emoji: '🤫', rows: 2 },
+        { id: 'recette', type: 'textarea', label: 'Ta recette secrète qu\'on n\'arrive jamais à reproduire pareille :', emoji: '🍪', rows: 2 },
+        { id: 'exaspere', type: 'textarea', label: 'La chose que tes petits-enfants font et qui t\'exaspère (mais tu t\'en vas jamais) :', emoji: '😠', rows: 2 },
+        { id: 'souvenir_futur', type: 'textarea', label: 'Ce que tu espères qu\'ils se souviendront de toi dans 30 ans :', emoji: '💝', rows: 3 }
+      ]
+    },
+    {
+      emoji: '🎯', title: 'Le grand quiz de Mamie\n(sans aide, pas le droit !)', num: 6,
+      fields: [
+        {
+          id: 'plutot', type: 'checkbox', label: 'Mamie, tu es plutôt…', emoji: '🌡️',
+          options: ['Tôt le matin ☀️', 'Tard le soir 🌙', 'Câlins 🤗', 'Pas trop les bisous 😬', 'Cuisine maison 🍲', 'Plats tout faits 🤷‍♀️', 'Mer 🌊', 'Montagne ⛰️', 'Chats 🐱', 'Chiens 🐶', 'Stricte 🧐', 'Complice 😏', 'Économe 💰', 'Dépensière 💸', 'Bonne perdante 😅', 'Très mauvaise perdante 😤']
+        },
+        { id: 'rebellion', type: 'rating', label: 'Sur une échelle de 1 à 10, à quel point tu étais rebelle ado ?', emoji: '🌶️', min: '😇', max: '😈' },
+        { id: 'phrase', type: 'text', label: 'La phrase que tu répètes TOUT LE TEMPS sans t\'en rendre compte :', emoji: '📜' }
+      ]
+    },
+    {
+      emoji: '🦉', title: 'La sagesse de Mamie\n(enfin, si elle en a…)', num: 7,
+      fields: [
+        { id: 'conseil_16', type: 'textarea', label: 'Si tu pouvais te donner UN conseil à toi-même à 16 ans, ce serait :', emoji: '⏪', rows: 3 },
+        { id: 'refaire', type: 'textarea', label: 'Le truc que tu referais différemment si c\'était à refaire :', emoji: '🚫', rows: 2 },
+        { id: 'monde_futur', type: 'textarea', label: 'Comment tu imagines le monde dans 50 ans ?', emoji: '🌍', rows: 2 },
+        { id: 'prediction_petits', type: 'textarea', label: 'Ce que tu imagines pour tes petits-enfants dans 20 ans :', emoji: '👤', rows: 2 },
+        { id: 'lecon', type: 'textarea', label: 'La chose la plus précieuse que tu aies apprise dans ta vie :', emoji: '💎', rows: 3 },
+        { id: 'blague', type: 'textarea', label: 'La blague que tu ressors à chaque repas de famille (qu\'on fait semblant de trouver drôle) :', emoji: '😂', rows: 2 }
+      ]
+    }
+  ];
+}
+
+function getPapiPages() {
+  return [
+    {
+      emoji: '📜', title: 'Qui est ce Papi mystérieux ?', num: 1,
+      fields: [
+        { id: 'prenom', type: 'text', label: 'Ton vrai prénom (celui que tout le monde a oublié) :', emoji: '👤' },
+        { id: 'age', type: 'text', label: 'Ton âge (approximativement, si ça te convient mieux) :', emoji: '🎂' },
+        { id: 'ville', type: 'text', label: 'La ville où tu as grandi :', emoji: '📍' },
+        { id: 'mots', type: 'textarea', label: '3 mots pour te décrire (sans mentir) :', emoji: '🌟', rows: 2 },
+        { id: 'peur_questionnaire', type: 'textarea', label: 'Qu\'est-ce qui te fait le plus peur dans ce questionnaire ?', emoji: '🤔', rows: 2 },
+        {
+          id: 'dinos', type: 'radio', label: 'Est-ce que tu as connu les dinosaures ?', emoji: '🦖',
+          options: ['Oui, on faisait du foot ensemble', 'Non, mais c\'était juste avant moi', 'Non !!!']
+        }
+      ]
+    },
+    {
+      emoji: '👦', title: 'L\'enfance de Papi\n(avant les écrans et le wi-fi)', num: 2,
+      fields: [
+        { id: 'chambre', type: 'text', label: 'Décris ta chambre d\'enfant en 3 mots :', emoji: '🏠' },
+        { id: 'emissions', type: 'textarea', label: 'Tes émissions / dessins animés préférés (qu\'on ne passe plus du tout) :', emoji: '📺', rows: 2 },
+        { id: 'bonbons', type: 'text', label: 'Ce que tu achetais avec tes pièces de 10 centimes :', emoji: '🍬' },
+        { id: 'betise', type: 'textarea', label: 'La bêtise la plus énorme que tu aies faite enfant :', emoji: '😇', rows: 3, note: '⚠️ Question piège — réponds honnêtement !' },
+        { id: 'sport', type: 'textarea', label: 'Ton sport préféré / ton héros sportif de l\'époque :', emoji: '⚽', rows: 2 },
+        { id: 'jeux', type: 'textarea', label: 'À quoi tu jouais dehors ? (et avec quels gamins du quartier ?)', emoji: '🎮', rows: 2 },
+        { id: 'surnom', type: 'text', label: 'Ton surnom quand tu étais petit :', emoji: '💭' }
+      ]
+    },
+    {
+      emoji: '😎', title: 'Papi ado\n(les années rock\'n\'roll)', num: 3,
+      fields: [
+        { id: 'coiffure', type: 'text', label: 'Ta coiffure la plus ridicule (avec du recul) :', emoji: '💈' },
+        { id: 'tenue', type: 'textarea', label: 'Ta tenue la plus tendance de l\'époque :', emoji: '👖', rows: 2 },
+        { id: 'chanson_coeur', type: 'text', label: 'Ta chanson que tu connaissais par cœur :', emoji: '🎤' },
+        { id: 'artiste_fan', type: 'text', label: 'Le chanteur / groupe pour lequel tu étais en mode fan absolu :', emoji: '💿' },
+        { id: 'chanson_honte', type: 'text', label: 'La chanson dont tu avais honte d\'aimer (mais tu la connaissais quand même) :', emoji: '🙈' },
+        { id: 'drague', type: 'textarea', label: 'Comment on draguait à ton époque ? (lettres ? téléphone fixe ?)', emoji: '💌', rows: 2 },
+        { id: 'pire_souvenir', type: 'textarea', label: 'Ton pire souvenir de lycée ou de l\'armée :', emoji: '😬', rows: 2 },
+        { id: 'couvre_feu', type: 'text', label: 'Heure officielle de rentrée vs heure réelle :', emoji: '🌙', note: 'Exemple : "21h... mais souvent minuit"' }
+      ]
+    },
+    {
+      emoji: '🔧', title: 'Papi & la technologie\n(de la roue au smartphone)', num: 4,
+      fields: [
+        {
+          id: 'timeline', type: 'timeline', label: 'La ligne du temps de Papi', emoji: '⏳',
+          items: ['📺 La télé couleur', '🖥️ Premier ordinateur', '📱 Premier téléphone mobile', '🌐 Internet à la maison', '🎮 Premier jeu vidéo']
+        },
+        { id: 'premiere_voiture', type: 'text', label: 'Ta première voiture (et son âge approximatif) :', emoji: '🚗' },
+        { id: 'techno_enerve', type: 'textarea', label: 'La technologie d\'aujourd\'hui qui t\'énerve ou que tu ne comprends pas :', emoji: '😤', rows: 2 },
+        { id: 'avant', type: 'textarea', label: 'Le truc qu\'on faisait avant et qu\'on n\'arrive pas à croire qu\'on faisait comme ça :', emoji: '🤷‍♂️', rows: 2, note: 'Ex : cabine téléphonique, carte routière, cassette vidéo…' },
+        { id: 'appli', type: 'text', label: 'L\'appli sur ton téléphone que tu utilises le plus (soyons honnête) :', emoji: '🏆' }
+      ]
+    },
+    {
+      emoji: '👶', title: 'Papi et ses petits-enfants\n(son chef d\'œuvre)', num: 5,
+      fields: [
+        { id: 'ressenti_papi', type: 'textarea', label: 'Ce que tu as ressenti quand tu as appris que tu allais être papi :', emoji: '💫', rows: 2 },
+        { id: 'prefere', type: 'text', label: 'Ton petit-enfant préféré (allez, on sait tous qu\'il y en a un…)', emoji: '🏆', note: '💡 Conseil : laisse un blanc, ça évitera les drames de Noël 😂' },
+        { id: 'secret', type: 'textarea', label: 'Le secret que tu gardes avec tes petits-enfants (sans le dire aux parents) :', emoji: '🤫', rows: 2 },
+        { id: 'apprends', type: 'textarea', label: 'Le truc que tu leur apprends que leurs parents n\'auraient jamais appris :', emoji: '🔧', rows: 2 },
+        { id: 'exaspere', type: 'textarea', label: 'La chose que tes petits-enfants font et qui t\'exaspère (mais tu les gardes quand même) :', emoji: '😠', rows: 2 },
+        { id: 'souvenir_futur', type: 'textarea', label: 'Ce que tu espères qu\'ils se souviendront de toi dans 30 ans :', emoji: '💝', rows: 3 }
+      ]
+    },
+    {
+      emoji: '🎯', title: 'Le grand quiz de Papi\n(sans aide, sans Google !)', num: 6,
+      fields: [
+        {
+          id: 'plutot', type: 'checkbox', label: 'Papi, tu es plutôt…', emoji: '🌡️',
+          options: ['Tôt le matin ☀️', 'Tard le soir 🌙', 'Câlins 🤗', 'Pas trop les bisous 😬', 'Cuisine maison 🍲', 'Resto / plats tout faits 🤷‍♂️', 'Mer 🌊', 'Montagne ⛰️', 'Chats 🐱', 'Chiens 🐶', 'Strict 🧐', 'Complice 😏', 'Économe 💰', 'Dépensier 💸', 'Bon perdant 😅', 'Très mauvais perdant 😤']
+        },
+        { id: 'rebellion', type: 'rating', label: 'Sur une échelle de 1 à 10, à quel point tu étais rebelle ado ?', emoji: '🌶️', min: '😇', max: '😈' },
+        { id: 'phrase', type: 'text', label: 'La phrase que tu répètes TOUT LE TEMPS sans t\'en rendre compte :', emoji: '📜' },
+        { id: 'reparation', type: 'textarea', label: 'Le truc que tu as "réparé" et qui ne marchait finalement plus du tout après :', emoji: '🛠️', rows: 2 }
+      ]
+    },
+    {
+      emoji: '🦉', title: 'La sagesse de Papi\n(enfin, s\'il en a…)', num: 7,
+      fields: [
+        { id: 'conseil_16', type: 'textarea', label: 'Si tu pouvais te donner UN conseil à toi-même à 16 ans, ce serait :', emoji: '⏪', rows: 3 },
+        { id: 'refaire', type: 'textarea', label: 'Le truc que tu referais différemment si c\'était à refaire :', emoji: '🚫', rows: 2 },
+        { id: 'monde_futur', type: 'textarea', label: 'Comment tu imagines le monde dans 50 ans ?', emoji: '🌍', rows: 2 },
+        { id: 'prediction_petits', type: 'textarea', label: 'Ce que tu imagines pour tes petits-enfants dans 20 ans :', emoji: '👤', rows: 2 },
+        { id: 'lecon', type: 'textarea', label: 'La chose la plus précieuse que tu aies apprise dans ta vie :', emoji: '💎', rows: 3 },
+        { id: 'blague', type: 'textarea', label: 'La blague nulle que tu ressors à chaque repas de famille :', emoji: '😂', rows: 2 }
+      ]
+    }
+  ];
+}
+
+// ─── ÉTAT ────────────────────────────────────────────────────────────────────
+let currentVersion = 'mamie';
+let currentPage = 0;
+let answers = {};
+let saveTimer = null;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+function startVersion(v) {
+  currentVersion = v;
+  currentPage = 0;
+  const ver = VERSIONS[v];
+
+  // Charger les réponses sauvegardées
+  const saved = localStorage.getItem('dinos_' + v);
+  answers = saved ? JSON.parse(saved) : {};
+
+  // Appliquer les couleurs CSS
+  document.documentElement.style.setProperty('--c1', ver.color1);
+  document.documentElement.style.setProperty('--c2', ver.color2);
+  document.documentElement.style.setProperty('--c3', ver.color3);
+  document.documentElement.style.setProperty('--bg', ver.bg);
+  document.documentElement.style.setProperty('--line', ver.line);
+  document.documentElement.style.setProperty('--card', ver.card);
+  document.body.style.background = ver.bg;
+
+  document.getElementById('headerVersion').textContent = ver.label;
+
+  document.getElementById('screen-welcome').style.display = 'none';
+  document.getElementById('screen-app').style.display = 'block';
+  document.getElementById('screen-done').style.display = 'none';
+
+  renderPage();
+}
+
+function renderPage() {
+  const ver = VERSIONS[currentVersion];
+  const pages = ver.pages;
+  const page = pages[currentPage];
+  const container = document.getElementById('pageContainer');
+
+  // Progress
+  document.getElementById('progressFill').style.width = ((currentPage + 1) / pages.length * 100) + '%';
+
+  // Buttons
+  document.getElementById('btnPrev').style.display = currentPage === 0 ? 'none' : '';
+  const isLast = currentPage === pages.length - 1;
+  document.getElementById('btnNext').textContent = isLast ? '✅ Terminer' : 'Suivant →';
+  document.getElementById('btnExport').style.display = isLast ? '' : 'none';
+
+  // Build HTML
+  let html = `<div class="form-page active">`;
+  html += `<div class="page-title-block">
+    <span class="pt-emoji">${page.emoji}</span>
+    <h2>${page.title.replace('\n', '<br>')}</h2>
+    <div class="pt-num">${page.num}</div>
+  </div>`;
+
+  page.fields.forEach(field => {
+    html += buildField(field);
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+
+  // Restore values
+  restoreValues(page.fields);
+
+  // Attach listeners
+  attachListeners(page.fields);
+
+  window.scrollTo(0, 0);
+}
+
+function buildField(f) {
+  let inner = '';
+  const key = currentVersion + '_' + f.id;
+
+  if (f.type === 'text') {
+    inner = `<input type="text" id="${key}" placeholder="Écris ici…">`;
+  } else if (f.type === 'textarea') {
+    inner = `<textarea id="${key}" rows="${f.rows || 3}" placeholder="Écris ici…"></textarea>`;
+  } else if (f.type === 'radio') {
+    inner = `<div class="radio-group">`;
+    f.options.forEach((opt, i) => {
+      inner += `<label class="radio-item" id="radio_${key}_${i}" onclick="selectRadio('${key}', ${i}, ${f.options.length})">
+        <div class="rb-dot"></div>${opt}
+      </label>`;
+    });
+    inner += `</div>`;
+  } else if (f.type === 'checkbox') {
+    inner = `<div class="checkbox-grid">`;
+    f.options.forEach((opt, i) => {
+      inner += `<label class="checkbox-item" id="cb_${key}_${i}" onclick="toggleCheck('${key}', ${i})">
+        <div class="cb-box"></div>${opt}
+      </label>`;
+    });
+    inner += `</div>`;
+  } else if (f.type === 'rating') {
+    inner = `<div class="rating-row">
+      <span class="rating-emoji">${f.min}</span>`;
+    for (let i = 1; i <= 10; i++) {
+      inner += `<button class="rating-btn" id="rating_${key}_${i}" onclick="selectRating('${key}', ${i})">${i}</button>`;
+    }
+    inner += `<span class="rating-emoji">${f.max}</span></div>`;
+  } else if (f.type === 'timeline') {
+    inner = ``;
+    f.items.forEach((item, i) => {
+      const tid = `${key}_tl_${i}`;
+      inner += `<div class="timeline-input">
+        <div class="timeline-dot-ui"></div>
+        <span class="timeline-label">${item}</span>
+        <input type="text" id="${tid}" placeholder="âge…" style="max-width:100px">
+      </div>`;
+    });
+  }
+
+  return `<div class="q-block">
+    <div class="q-label">
+      <span class="q-emoji-sm">${f.emoji}</span>
+      <span class="q-text">${f.label}</span>
+    </div>
+    ${f.note ? `<div class="q-note">${f.note}</div>` : ''}
+    ${inner}
+  </div>`;
+}
+
+function restoreValues(fields) {
+  fields.forEach(f => {
+    const key = currentVersion + '_' + f.id;
+    const val = answers[f.id];
+    if (!val) return;
+
+    if (f.type === 'text' || f.type === 'textarea') {
+      const el = document.getElementById(key);
+      if (el) el.value = val;
+    } else if (f.type === 'radio' && typeof val === 'number') {
+      document.getElementById(`radio_${key}_${val}`)?.classList.add('selected');
+    } else if (f.type === 'checkbox' && Array.isArray(val)) {
+      val.forEach(i => document.getElementById(`cb_${key}_${i}`)?.classList.add('checked'));
+      document.querySelectorAll(`[id^="cb_${key}_"]`).forEach(el => {
+        const i = parseInt(el.id.split('_').pop());
+        if (val.includes(i)) {
+          el.querySelector('.cb-box').textContent = '✓';
+        }
+      });
+    } else if (f.type === 'rating' && val) {
+      document.getElementById(`rating_${key}_${val}`)?.classList.add('selected');
+    } else if (f.type === 'timeline' && Array.isArray(val)) {
+      val.forEach((v, i) => {
+        const el = document.getElementById(`${key}_tl_${i}`);
+        if (el) el.value = v || '';
+      });
+    }
+  });
+}
+
+function attachListeners(fields) {
+  fields.forEach(f => {
+    const key = currentVersion + '_' + f.id;
+    if (f.type === 'text' || f.type === 'textarea') {
+      const el = document.getElementById(key);
+      if (el) el.addEventListener('input', () => {
+        answers[f.id] = el.value;
+        scheduleSave();
+      });
+    } else if (f.type === 'timeline') {
+      f.items.forEach((_, i) => {
+        const el = document.getElementById(`${key}_tl_${i}`);
+        if (el) el.addEventListener('input', () => {
+          if (!answers[f.id]) answers[f.id] = [];
+          answers[f.id][i] = el.value;
+          scheduleSave();
+        });
+      });
+    }
+  });
+}
+
+function selectRadio(key, idx, total) {
+  const fieldId = key.replace(currentVersion + '_', '');
+  answers[fieldId] = idx;
+  for (let i = 0; i < total; i++) {
+    document.getElementById(`radio_${key}_${i}`)?.classList.remove('selected');
+  }
+  document.getElementById(`radio_${key}_${idx}`)?.classList.add('selected');
+  scheduleSave();
+}
+
+function toggleCheck(key, idx) {
+  const fieldId = key.replace(currentVersion + '_', '');
+  if (!answers[fieldId]) answers[fieldId] = [];
+  const arr = answers[fieldId];
+  const pos = arr.indexOf(idx);
+  const el = document.getElementById(`cb_${key}_${idx}`);
+  const box = el?.querySelector('.cb-box');
+  if (pos === -1) {
+    arr.push(idx);
+    el?.classList.add('checked');
+    if (box) box.textContent = '✓';
+  } else {
+    arr.splice(pos, 1);
+    el?.classList.remove('checked');
+    if (box) box.textContent = '';
+  }
+  scheduleSave();
+}
+
+function selectRating(key, val) {
+  const fieldId = key.replace(currentVersion + '_', '');
+  answers[fieldId] = val;
+  for (let i = 1; i <= 10; i++) {
+    document.getElementById(`rating_${key}_${i}`)?.classList.remove('selected');
+  }
+  document.getElementById(`rating_${key}_${val}`)?.classList.add('selected');
+  scheduleSave();
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem('dinos_' + currentVersion, JSON.stringify(answers));
+    const ind = document.getElementById('savingIndicator');
+    ind.classList.add('show');
+    setTimeout(() => ind.classList.remove('show'), 1500);
+  }, 600);
+}
+
+function navigate(dir) {
+  const pages = VERSIONS[currentVersion].pages;
+  if (dir === 1 && currentPage === pages.length - 1) {
+    showDone();
+    return;
+  }
+  currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + dir));
+  renderPage();
+}
+
+function showDone() {
+  localStorage.setItem('dinos_' + currentVersion, JSON.stringify(answers));
+  const ver = VERSIONS[currentVersion];
+  document.getElementById('screen-app').style.display = 'none';
+  const done = document.getElementById('screen-done');
+  done.style.display = 'flex';
+  document.getElementById('doneEmoji').textContent = ver.doneEmoji;
+  document.getElementById('doneTitle').textContent = ver.doneTitle;
+}
+
+function goBack() {
+  document.getElementById('screen-done').style.display = 'none';
+  document.getElementById('screen-app').style.display = 'block';
+}
+
+function startOver() {
+  document.getElementById('screen-done').style.display = 'none';
+  document.getElementById('screen-welcome').style.display = 'flex';
+}
+
+// ─── PDF EXPORT (print-to-PDF) ────────────────────────────────────────────────
+function exportPDF() {
+  const ver = VERSIONS[currentVersion];
+  const saved = localStorage.getItem('dinos_' + currentVersion);
+  const data = saved ? JSON.parse(saved) : answers;
+
+  const c1 = ver.color1;
+  const c2 = ver.color2;
+  const card = ver.card;
+  const line = ver.line;
+
+  const getAnswer = (field) => {
+    const val = data[field.id];
+    if (!val && val !== 0) return null;
+    return val;
+  };
+
+  const renderFieldHTML = (field) => {
+    const val = getAnswer(field);
+    let answerHTML = '';
+
+    if (field.type === 'text' || field.type === 'textarea') {
+      answerHTML = val
+        ? `<div class="answer-box">${val}</div>`
+        : `<div class="blank-lines">${'<div class="blank-line"></div>'.repeat(field.rows || 1)}</div>`;
+    } else if (field.type === 'radio') {
+      answerHTML = `<div class="radio-list">` + field.options.map((opt, i) =>
+        `<div class="radio-opt ${val === i ? 'selected' : ''}">
+          <span class="rb">${val === i ? '●' : '○'}</span> ${opt}
+        </div>`
+      ).join('') + `</div>`;
+    } else if (field.type === 'checkbox') {
+      const checked = val || [];
+      answerHTML = `<div class="cb-grid">` + field.options.map((opt, i) =>
+        `<div class="cb-opt ${checked.includes(i) ? 'selected' : ''}">
+          <span class="cb">${checked.includes(i) ? '☑' : '☐'}</span> ${opt}
+        </div>`
+      ).join('') + `</div>`;
+    } else if (field.type === 'rating') {
+      answerHTML = `<div class="rating-list">` +
+        Array.from({length: 10}, (_, i) => i + 1).map(i =>
+          `<span class="rating-n ${val === i ? 'selected' : ''}">${i}</span>`
+        ).join('') + `</div>`;
+    } else if (field.type === 'timeline') {
+      const vals = val || [];
+      answerHTML = `<div class="timeline-list">` + field.items.map((item, i) =>
+        `<div class="tl-row">
+          <span class="tl-dot"></span>
+          <span class="tl-label">${item} :</span>
+          <span class="tl-val">${vals[i] || '_____ ans'}</span>
+        </div>`
+      ).join('') + `</div>`;
+    }
+
+    return `<div class="field-block">
+      <div class="field-label">${field.emoji} ${field.label}</div>
+      ${field.note ? `<div class="field-note">${field.note}</div>` : ''}
+      ${answerHTML}
+    </div>`;
+  };
+
+  const pagesHTML = ver.pages.map(page => `
+    <div class="print-page">
+      <div class="page-header">
+        <span class="ph-emoji">${page.emoji}</span>
+        <span class="ph-title">${page.title.replace('\n', ' — ')}</span>
+        <span class="ph-num">${page.num}</span>
+      </div>
+      ${page.fields.map(f => renderFieldHTML(f)).join('')}
+    </div>
+  `).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>T'as connu les dinosaures ? — ${ver.label}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Nunito', sans-serif; background: white; }
+
+  /* Square page 20x20cm */
+  .print-page {
+    width: 20cm;
+    min-height: 20cm;
+    margin: 0 auto 0.5cm;
+    padding: 1cm;
+    background: white;
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* COVER */
+  .cover-page {
+    width: 20cm;
+    height: 20cm;
+    margin: 0 auto 0.5cm;
+    background: linear-gradient(135deg, ${c1}, ${c2});
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    page-break-after: always;
+    break-after: page;
+    padding: 1.5cm;
+  }
+  .cover-page h1 { font-family:'Fredoka One',cursive; font-size:36pt; color:white; text-shadow:2px 3px 0 rgba(0,0,0,0.15); line-height:1.1; margin-bottom:10px; }
+  .cover-page .sub { color:rgba(255,255,255,0.9); font-size:13pt; font-weight:700; margin-bottom:20px; }
+  .cover-page .badge { background:white; color:${c1}; font-family:'Fredoka One',cursive; font-size:22pt; padding:8px 32px; border-radius:50px; margin-bottom:16px; }
+  .cover-page .dinos { font-size:18pt; color:white; letter-spacing:6px; margin-bottom:20px; }
+  .cover-page .offered { background:rgba(255,255,255,0.2); border-radius:12px; padding:12px 20px; color:white; font-size:11pt; font-weight:700; }
+  .cover-page .sig-line { border-bottom:2px solid rgba(255,255,255,0.6); margin-top:8px; height:24px; min-width:180px; }
+
+  /* PAGE HEADER */
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: ${card};
+    border-left: 5px solid ${c1};
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+  }
+  .ph-emoji { font-size: 24pt; }
+  .ph-title { font-family:'Fredoka One',cursive; font-size:14pt; color:${c1}; flex:1; line-height:1.2; }
+  .ph-num { background:${c1}; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:11pt; flex-shrink:0; }
+
+  /* FIELDS */
+  .field-block { margin-bottom:14px; }
+  .field-label { font-size:9.5pt; font-weight:800; color:#2D1B2D; margin-bottom:4px; line-height:1.4; }
+  .field-note { font-size:8pt; color:#999; font-style:italic; margin-bottom:4px; margin-left:4px; }
+
+  .answer-box { background:${card}; border-radius:8px; padding:7px 10px; font-size:9pt; font-weight:600; color:#2D1B2D; line-height:1.5; white-space:pre-wrap; }
+  .blank-line { border-bottom:1.5px solid ${line}; height:16px; margin-bottom:4px; }
+
+  .radio-list { display:flex; flex-direction:column; gap:4px; }
+  .radio-opt { font-size:9pt; font-weight:600; padding:4px 8px; border-radius:7px; border:1.5px solid ${line}; }
+  .radio-opt.selected { background:${card}; border-color:${c1}; font-weight:800; color:${c1}; }
+  .rb { font-size:11pt; }
+
+  .cb-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+  .cb-opt { font-size:8.5pt; font-weight:600; padding:4px 7px; border-radius:7px; border:1.5px solid ${line}; }
+  .cb-opt.selected { background:${card}; border-color:${c1}; color:${c1}; font-weight:800; }
+  .cb { font-size:11pt; }
+
+  .rating-list { display:flex; gap:5px; align-items:center; flex-wrap:wrap; }
+  .rating-n { width:26px; height:26px; border:1.5px solid ${line}; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; font-size:9pt; font-weight:800; color:#AAA; }
+  .rating-n.selected { background:${c1}; border-color:${c1}; color:white; }
+
+  .timeline-list { display:flex; flex-direction:column; gap:6px; }
+  .tl-row { display:flex; align-items:center; gap:8px; font-size:9pt; }
+  .tl-dot { width:12px; height:12px; background:${c1}; border-radius:50%; flex-shrink:0; }
+  .tl-label { font-weight:700; min-width:130px; }
+  .tl-val { font-weight:800; color:${c1}; }
+
+  /* LAST PAGE */
+  .last-page {
+    width: 20cm;
+    height: 20cm;
+    margin: 0 auto;
+    background: linear-gradient(135deg, ${c1}, ${c2});
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    page-break-after: always;
+    break-after: page;
+    padding: 1.5cm;
+  }
+  .last-page h2 { font-family:'Fredoka One',cursive; font-size:34pt; color:white; margin-bottom:12px; text-shadow:2px 3px 0 rgba(0,0,0,0.15); }
+  .last-page p { color:rgba(255,255,255,0.9); font-size:12pt; font-weight:700; margin-bottom:20px; line-height:1.5; }
+  .last-page .dinos { font-size:16pt; color:white; letter-spacing:5px; margin-bottom:24px; }
+  .last-sig { background:white; border-radius:16px; padding:20px 28px; width:100%; max-width:12cm; }
+  .last-sig-label { font-size:9pt; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .last-sig-line { border-bottom:2px solid ${line}; height:28px; margin-bottom:14px; }
+
+  @media print {
+    body { margin:0; }
+    .print-page, .cover-page, .last-page { margin:0; box-shadow:none; }
+    @page { size: 20cm 20cm; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover-page">
+  <div style="font-size:52pt;margin-bottom:8px;">${ver.coverEmoji}</div>
+  <h1>T'as connu<br>les dinosaures ?</h1>
+  <div class="dinos">${ver.coverDinos}</div>
+  <div class="sub">Questions impertinentes sur<br>l'époque préhistorique de…</div>
+  <div class="badge">${ver.emoji} ${ver.label} ${ver.emoji}</div>
+  <div class="offered">
+    ✍️ À remplir par ${ver.label} (honnêtement !)<br>
+    🎁 Offert avec amour par :<br>
+    <div class="sig-line"></div>
+  </div>
+</div>
+
+${pagesHTML}
+
+<!-- LAST PAGE -->
+<div class="last-page">
+  <div style="font-size:52pt;margin-bottom:12px;">${ver.doneEmoji}</div>
+  <h2>Merci ${ver.label} !</h2>
+  <div class="dinos">${ver.coverDinos}</div>
+  <p>Ce livre est maintenant un trésor familial.<br>À lire et relire dans des années, en rigolant (beaucoup).</p>
+  <div class="last-sig">
+    <div class="last-sig-label">✍️ Signature officielle de ${ver.label}</div>
+    <div class="last-sig-line"></div>
+    <div class="last-sig-label">📅 Date de remplissage</div>
+    <div class="last-sig-line"></div>
+  </div>
+</div>
+
+<script>
+  window.onload = () => {
+    setTimeout(() => window.print(), 500);
+  };
+<\/script>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
+  if (!win) {
+    // Fallback: direct download of HTML to print later
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dinos-${currentVersion}.html`;
+    a.click();
+  }
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
