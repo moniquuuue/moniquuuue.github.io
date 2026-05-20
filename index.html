@@ -889,6 +889,12 @@ function buildField(f) {
         <input type="text" id="${tid}" placeholder="âge…" style="max-width:100px">
       </div>`;
     });
+  } else if (f.type === 'photos') {
+    inner = `
+      <div class="photo-grid" id="photo-grid-${key}"></div>
+      <label class="photo-add-btn" onclick="addPhotoSlot('${key}')">📸 Ajouter une photo</label>
+      <input type="file" id="photo-input-${key}" accept="image/*" style="display:none" onchange="handlePhotoUpload('${key}', this)">
+    `;
   }
 
   return `<div class="q-block">
