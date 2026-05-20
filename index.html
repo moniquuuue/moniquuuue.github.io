@@ -560,16 +560,7 @@ textarea:focus, input[type="text"]:focus {
 <div id="screen-done">
   <div class="done-emoji" id="doneEmoji">🦕</div>
   <h2 id="doneTitle">Bravo Mamie !</h2>
-  <p>Le livre est complet ! Télécharge le PDF et envoie-le à ton service d'impression préféré pour commander 3 exemplaires.</p>
-
-  <div class="export-info">
-    <h3>📦 Services d'impression recommandés</h3>
-    <ul>
-      <li>🇫🇷 <strong>Cheerz.com</strong> — photobooks carrés, livraison France</li>
-      <li>🖨️ <strong>Photobox.fr</strong> — format carré 20×20 cm</li>
-      <li>📸 <strong>Lalalab.com</strong> — très bon rendu couleurs</li>
-      <li>🌍 <strong>Canva Print</strong> — upload PDF, livraison rapide</li>
-    </ul>
+  <p>Le livre est complet ! Télécharge le PDF et envoie-le à Elsa.</p>
   </div>
 
   <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
@@ -622,7 +613,7 @@ function getMamiPages() {
       fields: [
         { id: 'prenom', type: 'text', label: 'Ton prénom (le vrai, pas juste "Mamie") :', emoji: '👤' },
         { id: 'age', type: 'text', label: 'Ton âge — on promet de ne pas être choqués :', emoji: '🎂' },
-        { id: 'ville', type: 'text', label: 'La ville où tu as grandi :', emoji: '📍' },
+        { id: 'ville', type: 'text', label: 'L'endroit où tu as grandi :', emoji: '📍' },
         { id: 'couleur', type: 'text', label: 'Ta couleur préférée depuis toujours :', emoji: '🎨' },
         { id: 'animal', type: 'text', label: 'Si tu étais un animal, tu serais… et pourquoi :', emoji: '🦋' },
         { id: 'dinos', type: 'radio', label: 'Soyons honnêtes… tu as connu les dinosaures ?', emoji: '🦕',
@@ -635,7 +626,7 @@ function getMamiPages() {
       fields: [
         { id: 'jouet_prefere', type: 'textarea', label: 'Ton jouet préféré quand tu étais petite (décris-le, on ne le connaît peut-être pas !) :', emoji: '🧸', rows: 2 },
         { id: 'dessins_animes', type: 'textarea', label: 'Tes dessins animés préférés — nos parents les connaissent même pas :', emoji: '📺', rows: 2 },
-        { id: 'jeu_dehors', type: 'textarea', label: 'À quoi tu jouais dehors ? (sans tablette, sans téléphone… comment tu faisais ?!)', emoji: '🌳', rows: 2 },
+        { id: 'jeu_dehors', type: 'textarea', label: 'À quoi tu jouais dehors ?', emoji: '🌳', rows: 2 },
         { id: 'bonbons', type: 'text', label: 'Ton bonbon ou gâteau préféré quand tu étais petite :', emoji: '🍬' },
         { id: 'peur_enfant', type: 'text', label: 'Ta plus grande peur quand tu étais petite :', emoji: '👻', note: 'Le noir ? Les araignées ? Quelque chose de bizarre ?' },
         { id: 'betise', type: 'textarea', label: 'La bêtise la plus énorme que tu aies faite enfant :', emoji: '😇', rows: 3, note: 'Promis, on ne répète rien… enfin presque !' },
@@ -643,7 +634,7 @@ function getMamiPages() {
       ]
     },
     {
-      emoji: '🎒', title: 'Mamie à l\'école\n(la maîtresse s\'en souvient encore ?)', num: 3,
+      emoji: '🎒', title: 'Mamie à l\'école\n(la maîtresse s\'en souvient encore !)', num: 3,
       fields: [
         { id: 'matiere_preferee', type: 'text', label: 'Ta matière préférée à l\'école :', emoji: '⭐' },
         { id: 'matiere_nulle', type: 'text', label: 'La matière où tu étais… disons… moins brillante :', emoji: '😬' },
@@ -658,8 +649,8 @@ function getMamiPages() {
       fields: [
         { id: 'timeline', type: 'timeline', label: 'Quel âge tu avais quand tu as vu ça pour la première fois ?', emoji: '⏳',
           items: ['📺 La télé couleur', '🖥️ Un ordinateur', '📱 Un téléphone portable', '🌐 Internet', '📷 Un appareil photo numérique'] },
-        { id: 'objet_disparu', type: 'textarea', label: 'Un objet de ton enfance qui n\'existe presque plus :', emoji: '📼', rows: 2, note: 'Ex : magnétoscope, cabine téléphonique, encyclopédie papier…' },
-        { id: 'sans_internet', type: 'textarea', label: 'Comment tu faisais pour trouver une info sans Google ?', emoji: '🤔', rows: 2 },
+        { id: 'objet_disparu', type: 'textarea', label: 'Un objet de ton enfance qui n\'existe presque plus :', emoji: '📼' },
+        { id: 'sans_internet', type: 'textarea', label: 'Comment tu faisais pour trouver une info sans internet ?', emoji: '🤔', rows: 2 },
         { id: 'jeu_sans_ecran', type: 'textarea', label: 'Le truc le plus amusant que tu faisais et qu\'on ne peut plus faire aujourd\'hui :', emoji: '🎪', rows: 2 }
       ]
     },
@@ -667,7 +658,7 @@ function getMamiPages() {
       emoji: '💕', title: 'Nous, tes petits-enfants !\n(ta plus belle invention)', num: 5,
       fields: [
         { id: 'ressenti_mamie', type: 'textarea', label: 'Ce que tu as ressenti le jour où tu as appris que tu allais être mamie :', emoji: '💫', rows: 2 },
-        { id: 'premier_souvenir', type: 'textarea', label: 'Ton premier souvenir avec tes petits-enfants :', emoji: '🌈', rows: 2 },
+        { id: 'premier_souvenir', type: 'textarea', label: 'Quelques souvenirs avec tes petits-enfants :', emoji: '🌈', rows: 2 },
         { id: 'activite_preferee', type: 'textarea', label: 'L\'activité que tu préfères faire avec eux :', emoji: '🎈', rows: 2 },
         { id: 'recette', type: 'textarea', label: 'Ta recette secrète qu\'on n\'arrive jamais à reproduire pareille :', emoji: '🍪', rows: 2 },
         { id: 'fierte', type: 'textarea', label: 'Ce qui te rend la plus fière quand tu nous regardes :', emoji: '🏅', rows: 2 },
@@ -681,7 +672,7 @@ function getMamiPages() {
           note: 'Réponds comme tu penses qu\'ils répondraient pour toi 😄',
           options: ['Tôt le matin ☀️', 'Tard le soir 🌙', 'Câlins à gogo 🤗', 'Bisous discrets 😊', 'Mer 🌊', 'Montagne ⛰️', 'Chats 🐱', 'Chiens 🐶', 'Sucré 🍰', 'Salé 🧀', 'Rigolote 😄', 'Sérieuse 🧐', 'Douceur 🌸', 'Franche du collier 😤', 'Bonne perdante 😅', 'Très mauvaise perdante 😤'] },
         { id: 'note_mamie', type: 'rating', label: 'Sur 10, tu te notes combien comme Mamie ? (d\'après toi, on mettrait combien ?)', emoji: '⭐', min: '😅', max: '🏆' },
-        { id: 'phrase', type: 'text', label: 'La phrase que tu répètes TOUT LE TEMPS sans t\'en rendre compte :', emoji: '📢', note: 'Celle qui fait lever les yeux au ciel à toute la famille 😄' }
+        { id: 'phrase', type: 'text', label: 'La phrase que tu répètes TOUT LE TEMPS sans t\'en rendre compte :', emoji: '📢' }
       ]
     },
     {
@@ -705,7 +696,7 @@ function getPapiPages() {
       fields: [
         { id: 'prenom', type: 'text', label: 'Ton prénom (le vrai, pas juste "Papi") :', emoji: '👤' },
         { id: 'age', type: 'text', label: 'Ton âge — on promet de ne pas être choqués :', emoji: '🎂' },
-        { id: 'ville', type: 'text', label: 'La ville où tu as grandi :', emoji: '📍' },
+        { id: 'ville', type: 'text', label: 'L'endroit où tu as grandi :', emoji: '📍' },
         { id: 'couleur', type: 'text', label: 'Ta couleur préférée depuis toujours :', emoji: '🎨' },
         { id: 'animal', type: 'text', label: 'Si tu étais un animal, tu serais… et pourquoi :', emoji: '🦁' },
         { id: 'dinos', type: 'radio', label: 'Soyons honnêtes… tu as connu les dinosaures ?', emoji: '🦖',
@@ -718,7 +709,7 @@ function getPapiPages() {
       fields: [
         { id: 'jouet_prefere', type: 'textarea', label: 'Ton jouet préféré quand tu étais petit (décris-le, on ne le connaît peut-être pas !) :', emoji: '🚂', rows: 2 },
         { id: 'emissions', type: 'textarea', label: 'Tes émissions / dessins animés préférés — nos parents les connaissent même pas :', emoji: '📺', rows: 2 },
-        { id: 'jeu_dehors', type: 'textarea', label: 'À quoi tu jouais dehors ? (sans tablette, sans téléphone… comment tu faisais ?!)', emoji: '⚽', rows: 2 },
+        { id: 'jeu_dehors', type: 'textarea', label: 'À quoi tu jouais dehors ?', emoji: '⚽', rows: 2 },
         { id: 'bonbons', type: 'text', label: 'Ton bonbon ou gâteau préféré quand tu étais petit :', emoji: '🍬' },
         { id: 'peur_enfant', type: 'text', label: 'Ta plus grande peur quand tu étais petit :', emoji: '👻', note: 'Le noir ? Les araignées ? Quelque chose de bizarre ?' },
         { id: 'betise', type: 'textarea', label: 'La bêtise la plus énorme que tu aies faite enfant :', emoji: '😇', rows: 3, note: 'Promis, on ne répète rien… enfin presque !' },
@@ -726,7 +717,7 @@ function getPapiPages() {
       ]
     },
     {
-      emoji: '🎒', title: 'Papi à l\'école\n(le maître s\'en souvient encore ?)', num: 3,
+      emoji: '🎒', title: 'Papi à l\'école\n(le maître s\'en souvient encore ! )', num: 3,
       fields: [
         { id: 'matiere_preferee', type: 'text', label: 'Ta matière préférée à l\'école :', emoji: '⭐' },
         { id: 'matiere_nulle', type: 'text', label: 'La matière où tu étais… disons… moins brillant :', emoji: '😬' },
@@ -741,8 +732,8 @@ function getPapiPages() {
       fields: [
         { id: 'timeline', type: 'timeline', label: 'Quel âge tu avais quand tu as vu ça pour la première fois ?', emoji: '⏳',
           items: ['📺 La télé couleur', '🖥️ Un ordinateur', '📱 Un téléphone portable', '🌐 Internet', '🎮 Un jeu vidéo'] },
-        { id: 'objet_disparu', type: 'textarea', label: 'Un objet de ton enfance qui n\'existe presque plus :', emoji: '📼', rows: 2, note: 'Ex : magnétoscope, cabine téléphonique, encyclopédie papier…' },
-        { id: 'sans_internet', type: 'textarea', label: 'Comment tu faisais pour trouver une info sans Google ?', emoji: '🤔', rows: 2 },
+        { id: 'objet_disparu', type: 'textarea', label: 'Un objet de ton enfance qui n\'existe presque plus :', emoji: '📼' },
+        { id: 'sans_internet', type: 'textarea', label: 'Comment tu faisais pour trouver une info sans internet ?', emoji: '🤔', rows: 2 },
         { id: 'jeu_sans_ecran', type: 'textarea', label: 'Le truc le plus amusant que tu faisais et qu\'on ne peut plus faire aujourd\'hui :', emoji: '🎪', rows: 2 }
       ]
     },
@@ -750,7 +741,7 @@ function getPapiPages() {
       emoji: '💙', title: 'Nous, tes petits-enfants !\n(ton chef-d\'œuvre)', num: 5,
       fields: [
         { id: 'ressenti_papi', type: 'textarea', label: 'Ce que tu as ressenti le jour où tu as appris que tu allais être papi :', emoji: '💫', rows: 2 },
-        { id: 'premier_souvenir', type: 'textarea', label: 'Ton premier souvenir avec tes petits-enfants :', emoji: '🌈', rows: 2 },
+        { id: 'premier_souvenir', type: 'textarea', label: 'Des souvenirs avec tes petits-enfants :', emoji: '🌈', rows: 2 },
         { id: 'activite_preferee', type: 'textarea', label: 'L\'activité que tu préfères faire avec eux :', emoji: '🎈', rows: 2 },
         { id: 'apprends', type: 'textarea', label: 'Le truc que tu leur apprends et que leurs parents n\'auraient jamais pensé à leur apprendre :', emoji: '🔧', rows: 2 },
         { id: 'fierte', type: 'textarea', label: 'Ce qui te rend le plus fier quand tu nous regardes :', emoji: '🏅', rows: 2 },
@@ -764,7 +755,7 @@ function getPapiPages() {
           note: 'Réponds comme tu penses qu\'ils répondraient pour toi 😄',
           options: ['Tôt le matin ☀️', 'Tard le soir 🌙', 'Câlins à gogo 🤗', 'Bisous discrets 😊', 'Mer 🌊', 'Montagne ⛰️', 'Chats 🐱', 'Chiens 🐶', 'Sucré 🍰', 'Salé 🧀', 'Rigolo 😄', 'Sérieux 🧐', 'Bricoleur 🔨', 'Canapé + télé 📺', 'Bon perdant 😅', 'Très mauvais perdant 😤'] },
         { id: 'note_papi', type: 'rating', label: 'Sur 10, tu te notes combien comme Papi ? (d\'après toi, on mettrait combien ?)', emoji: '⭐', min: '😅', max: '🏆' },
-        { id: 'phrase', type: 'text', label: 'La phrase que tu répètes TOUT LE TEMPS sans t\'en rendre compte :', emoji: '📢', note: 'Celle qui fait lever les yeux au ciel à toute la famille 😄' }
+        { id: 'phrase', type: 'text', label: 'La phrase que tu répètes TOUT LE TEMPS sans t\'en rendre compte :', emoji: '📢' }
       ]
     },
     {
